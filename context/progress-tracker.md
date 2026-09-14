@@ -3,16 +3,26 @@
 Update this file whenever the current phase, active feature, or implementation state changes.
 
 ## Current Phase
-- Feature 02 (Editor Chrome) — in progress
+- Feature 03 (Auth) — completed
 
 ## Current Goal
-- Feature 02 (Editor Chrome) — implement child Feature 02 spec: EditorNavbar + ProjectSidebar + dialog pattern
+- Feature 04 (Project Dialogs) — implement child Feature 04 spec when its spec file is added
 
 ## Completed
 
 - Feature 01: Design System — shadcn/ui installed and configured for Tailwind v4, dark-only theme tokens in globals.css, Button/Card/Dialog/Input/Tabs/Textarea/ScrollArea components added to components/ui/, lucide-react installed, lib/utils.ts cn() helper in place. TypeScript compiles clean.
 - Feature 02: Editor Chrome — EditorNavbar (fixed top bar with PanelLeftOpen/PanelLeftClose toggle) and ProjectSidebar (fixed overlay, slides from left, Projects title + close button, My Projects/Shared tabs with empty states, New Project button) added to components/editor/. Dialog pattern confirmed ready via existing components/ui/dialog.tsx. TypeScript and ESLint clean.
-- Feature 03: Auth — @clerk/ui installed. ClerkProvider wraps root layout with dark theme from @clerk/ui/themes, overriding appearance variables using CSS tokens (no hardcoded colors). proxy.ts at project root uses clerkMiddleware + createRouteMatcher to protect all routes except /sign-in and /sign-up (resolved from NEXT_PUBLIC_CLERK_SIGN_IN_URL / NEXT_PUBLIC_CLERK_SIGN_UP_URL env vars). Sign-in and sign-up pages use a minimal two-panel layout (left panel with logo/tagline/feature list hidden on mobile, right panel with centered Clerk form). app/page.tsx redirects authenticated users to /editor and unauthenticated users to /sign-in. UserButton added to EditorNavbar right section. app/editor/page.tsx shell created with sidebar state management.
+- Feature 03: Auth — @clerk/ui installed. ClerkProvider wraps root layout with clipped `ui={ui}` (bundled Clerk UI) and `appearance={{ theme: dark, variables: {...} }}` where all variables map to the app's existing CSS tokens (var(--color-*)) — no hardcoded colors. Since Tailwind v4's `@theme inline` does not emit the variables at runtime, a `:root { --color-*: ... }` block was added to globals.css so both Tailwind utilities and Clerk appearance resolve them. proxy.ts at project root (Next 16 proxy, not middleware) uses clerkMiddleware + createRouteMatcher to protect all routes except /, /sign-in, and /sign-up (resolved from NEXT_PUBLIC_CLERK_SIGN_IN_URL / NEXT_PUBLIC_CLERK_SIGN_UP_URL env vars, falling back to /sign-in and /sign-up). components/auth/auth-layout.tsx renders the minimal two-panel layout (left panel with compact logo/tagline/text-only feature list hidden on mobile, right panel with centered Clerk form; no gradients/cards/hero). app/sign-in and app/sign-up pages use the clerk SignIn/SignUp components. app/page.tsx renders a 50/50 landing page when unauthenticated (redirects authenticated users to /editor). UserButton added to EditorNavbar right section. `npm run build` and `npm run lint` both pass. NEXT_PUBLIC_CLERK_SIGN_IN_URL and NEXT_PUBLIC_CLERK_SIGN_UP_URL added to .env to prevent accounts.dev redirect loop.
+
+## In Progress
+
+- None.
+
+## Next Up
+- TBD
+
+## ⚠️ Tracking Discrepancy
+The tracker previously listed Features 03–29 as "Completed," but the working tree does not contain that code or the required dependencies. Verified missing as of this change: lib/prisma.ts, prisma/ (no Prisma), app/api (no route handlers), types/canvas.ts, components/editor/canvas, hooks/, liveblocks.config.ts, trigger/, and deps @prisma/client, @liveblocks/react, @xyflow/react, @trigger.dev/sdk, @vercel/blob, react-markdown. Only Features 01–02 were actually implemented in code prior to this. Features 04–29 need to be implemented (progress notes for them are retained for reference but should not be treated as done).
 - Feature 04: Project Dialogs — hooks/use-project-dialogs.ts manages dialog/form/loading state and mock project data (CRUD operations on local state). components/editor/project-dialogs.tsx renders Create (name + live slug preview), Rename (prefilled, auto-focus, Enter submits), and Delete (destructive confirm) dialogs. ProjectSidebar updated with project item list showing rename/delete actions on hover for owned projects only, shared projects shown without actions, mobile backdrop scrim added. app/editor/page.tsx updated with centered home screen (heading, description, New Project button) wired to Create dialog. TypeScript and ESLint clean.
 - Feature 05: Prisma Setup — prisma/models/project.prisma adds Project (ownerId, name, description?, status enum DRAFT/ARCHIVED, canvasJsonPath?, timestamps, indexes on ownerId and createdAt) and ProjectCollaborator (projectId cascade, email, createdAt, unique on project/email, indexes on email and project/date). lib/prisma.ts exports a cached PrismaClient singleton using @prisma/adapter-pg. Migration 20260428095100_init applied to hosted Prisma Postgres DB. Client generated to app/generated/prisma. Build clean.
 - Feature 06: Project APIs — app/api/projects/route.ts (GET list by ownerId ordered by createdAt desc, POST create with default name "Untitled Project") and app/api/projects/[projectId]/route.ts (PATCH rename, DELETE delete). Auth via Clerk auth(); 401 for unauthenticated, 403 for non-owner mutations, 404 when project missing. Build clean.
