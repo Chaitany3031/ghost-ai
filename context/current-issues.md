@@ -1,4 +1,4 @@
-When i hit http://localhost:3000 the url automatically changes to https://fancy-anchovy-2045.accounts.dev/sign-in?redirect_url=http%3A%2F%2Flocalhost%3A3000%2F 
+<!-- When i hit http://localhost:3000 the url automatically changes to https://fancy-anchovy-2045.accounts.dev/sign-in?redirect_url=http%3A%2F%2Flocalhost%3A3000%2F 
 this are the terminal logs 
 PS C:\Users\chaitanya\OneDrive\Desktop\ghost-ai> npm run dev
 
@@ -31,4 +31,4 @@ To learn more, including how to opt-out from the telemetry program, visit: https
   └─ ƒ invalidateCacheAction() in 15ms node_modules/@clerk/nextjs/dist/esm/app-router/server-actions.js
 [browser] Failed to fetch RSC payload for http://localhost:3000/. Falling back to browser navigation. TypeError: Failed to fetch
 
-also the homepage or landing page should look like we shared the screenshot
+also the homepage or landing page should look like we shared the screenshot -->
